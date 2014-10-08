@@ -1,7 +1,7 @@
 Hacker News Enhancement Suite
 =============================
 
-A Hacker News extension for Chrome which changes lots of things.
+A Hacker News extension for Safari which changes lots of things.
 
 Features
 --------
@@ -29,10 +29,6 @@ Features
   * c - View comments in a new tab
   * b - Open both the comments and the story in new tabs
 
-Chrome web store link
----------------------
-https://chrome.google.com/webstore/detail/bappiabcodbpphnojdiaddhnilfnjmpm
-
 TODO
 ----
 * Options page
@@ -57,6 +53,8 @@ MIT License, see LICENSE
 
 Thanks
 ------
+Chris James for creating the Chrome extension http://etcet.net https://github.com/etcet
+
 Wayne Larson for hckrnews.com and permission to use code from his extension which displays new comments.
 
 @jarques for his HN+ extension (https://github.com/jarquesp/Hacker-News--) which was used as a starting point for this project.
