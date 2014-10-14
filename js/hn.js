@@ -63,7 +63,7 @@ var InlineReply = {
       $(this).attr("value","Posting...");
       //Add loading spinner
       image = $('<img style="vertical-align:middle;margin-left:5px;"/>');
-      image.attr('src',chrome.extension.getURL("images/spin.gif"));
+      //image.attr('src',chrome.extension.getURL("images/spin.gif"));
       $(this).after(image);
       //Post
       InlineReply.postCommentTo(link, domain, text, $(this));
@@ -584,20 +584,20 @@ var HN = {
     },
 
     getLocalStorage: function(key, callback) {
-      chrome.extension.sendRequest({
-        method: "getLocalStorage",
-        key: key
-      }, callback);
+      //chrome.extension.sendRequest({
+      //  method: "getLocalStorage",
+      //  key: key
+      //}, callback);
     },
 
     setLocalStorage: function(key, value) {
-      chrome.extension.sendRequest(
-        { method: "setLocalStorage",
-          key: key,
-          value: value },
-        function(response) {
+      //chrome.extension.sendRequest(
+      //  { method: "setLocalStorage",
+      // /   key: key,
+      //    value: value },
+      //  function(response) {
           //console.log('RESPONSE', response.data);
-        });
+      //  });
     },
 
     doLogin: function() {
@@ -837,7 +837,7 @@ var HN = {
 
         //redirect to profile page after updating, instead of /x page
         $('input[value="update"]').click(function() {
-          HN.setLocalStorage('update_profile', window.location.href);
+          localStorage['update_profile'] = window.location.href;
         });
       }
     }, 
@@ -1430,56 +1430,31 @@ var HN = {
     }
 }
 
+HN.init();
 
-//show new comment count on hckrnews.com
-if (window.location.host == "hckrnews.com") {
-  $('ul.entries li').each(function() {
-    chrome.extension.sendRequest({method: "getLocalStorage", key: Number($(this).attr('id'))}, function(response) {
-      if (response.data != undefined) {
-        var data = JSON.parse(response.data);
-        var id = data.id;
-        var num = data.num ? data.num : 0;
-        var now = Number($('#'+id).find('.comments').text());
-        var unread = Math.max(now - num, 0); 
-        var prepend = unread == 0 ? "" + unread + " / " : "<span>"+unread+"</span> / ";
-        $(document).ready(function() {
-          $('#'+id).find('.comments').prepend(prepend);
-        });
-      }
-    });
-  });
-}
-else {
-  HN.init();
-
-  $(document).ready(function(){
-    if ("Unknown or expired link." == $('body').html()) {
-      HN.setLocalStorage('expired', true);
-      window.location.replace("/");
-      return;
+$(document).ready(function(){
+  if ("Unknown or expired link." == $('body').html()) {
+    localStorage['expired'] = true;
+    window.location.replace("/");
+    return;
+  }
+  else {
+    var sExpired = localStorage['expired'];
+    if( sExpired != undefined && sExpired == 'true'){
+      $('#header').after("<p id=\"alert\">You reached an <a href=\"//news.ycombinator.com/item?id=17705\" title=\"what?\">expired page</a> and have been redirected back to the front page.</p>");
+      localStorage['expired'] = false;
     }
-    else {
-      HN.getLocalStorage('expired', function(response) {
-        if (response.data != undefined) {
-          var expired = JSON.parse(response.data);
-          if (expired) {
-            $('#header').after("<p id=\"alert\">You reached an <a href=\"//news.ycombinator.com/item?id=17705\" title=\"what?\">expired page</a> and have been redirected back to the front page.</p>");
-            HN.setLocalStorage('expired', false);
-          }
-        }
-      });
-    }
+  }
 
-    //redirect to profile page after updating it
-    if (window.location.pathname == "/x") {
-      HN.getLocalStorage('update_profile', function(response) {
-        if (response.data != undefined && response.data != "false") {
-          HN.setLocalStorage('update_profile', false);
-          window.location.replace(response.data);
-        }
-      });
+  //redirect to profile page after updating it
+  if (window.location.pathname == "/x") {
+    var sLoc = localStorage['update_profile'];
+    if ( sLoc != undefined && sLoc != "false") {
+      localStorage['update_profile'] = false;
+      window.location.replace(sLoc);
     }
     
-    $('body').css('visibility', 'visible');
-  });
-}
+  }
+  
+  $('body').css('visibility', 'visible');
+});
