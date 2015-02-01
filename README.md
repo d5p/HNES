@@ -55,6 +55,8 @@ Thanks
 ------
 Chris James for creating the Chrome extension http://etcet.net https://github.com/etcet
 
+Zach Berger for the Safari port of Chris James' original extension https://github.com/zachberger/HNES
+
 Wayne Larson for hckrnews.com and permission to use code from his extension which displays new comments.
 
 @jarques for his HN+ extension (https://github.com/jarquesp/Hacker-News--) which was used as a starting point for this project.
